@@ -373,7 +373,19 @@ textarea { resize: vertical; line-height: 1.45; }
   position: relative; z-index: 1;
   touch-action: pan-y;     /* mantém o scroll vertical da página */
   will-change: transform;
+  cursor: grab;
 }
+.staff-feed .post-row > .post:active { cursor: grabbing; }
+
+/* botão visível de responder (fallback do swipe, funciona em qualquer aparelho) */
+.reply-open {
+  display: inline-flex; align-items: center; gap: 5px;
+  margin-top: 11px;
+  font-family: inherit; font-weight: 600; font-size: .82rem; cursor: pointer;
+  color: var(--brand-deep); background: var(--good-tint);
+  border: 1px solid var(--good-line); border-radius: 999px; padding: 7px 13px;
+}
+.reply-open:hover { background: #e7f3ec; }
 
 /* editor de resposta — desliza aberto */
 .reply-editor { max-height: 0; overflow: hidden; transition: max-height .22s ease; }

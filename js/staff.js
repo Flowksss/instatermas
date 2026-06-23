@@ -110,6 +110,7 @@
           </header>
           <p>${esc(p.message)}</p>
           ${responseHTML(p)}
+          <button class="reply-open">${p.response ? "✎ Editar resposta" : "↩ Responder ao hóspede"}</button>
           <div class="reply-editor">
             <textarea class="reply-text" rows="2" placeholder="Escreva a resposta do setor...">${p.response ? esc(p.response) : ""}</textarea>
             <div class="reply-actions">
@@ -190,6 +191,7 @@
 
     feedList.querySelectorAll(".post-row").forEach((row) => {
       setupSwipe(row);
+      row.querySelector(".reply-open").addEventListener("click", () => openEditor(row));
       row.querySelector(".hide-btn").addEventListener("click", async () => {
         if (confirm("Ocultar esta mensagem do mural?")) {
           await backend.hide(row.dataset.id);
