@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#137a5e" />
+  <title>Instermas · Painel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="staff-body">
+  <header class="staff-topbar">
+    <div class="staff-brand">
+      <span class="logo-mark"></span>
+      <strong class="logo sm">Instermas</strong>
+      <span class="staff-badge">Painel interno</span>
+    </div>
+    <div class="monitor">
+      <button id="enable-monitor" class="btn-monitor">🔔 Ativar monitoramento</button>
+      <span id="monitor-status" class="monitor-status"><span class="dot"></span>som desligado</span>
+    </div>
+  </header>
+
+  <div class="filters">
+    <button data-filter="reclamacao" class="active">⚠ Reclamações</button>
+    <button data-filter="todos">Tudo</button>
+    <button data-filter="elogio">👍 Elogios</button>
+  </div>
+
+  <main id="staff-feed" class="feed-list staff-feed"></main>
+
+  <div id="mode-banner" class="mode-banner" hidden>modo demo · só neste aparelho</div>
+
+  <script src="js/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/backend.js"></script>
+  <script src="js/staff.js"></script>
+  <script>
+    if (window.INSTERMAS_MODE === "demo") document.getElementById("mode-banner").hidden = false;
+  </script>
+</body>
+</html>

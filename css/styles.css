@@ -1,0 +1,327 @@
+/* ============================================================
+   INSTERMAS · Estilos — Direção "Água"
+   Mural das Termas Romanas. Paleta tirada da logo:
+   esmeralda + água-turquesa. Clássico sutil (serifa romana
+   nos títulos), mobile-first, alto contraste pro sol.
+   ============================================================ */
+
+:root {
+  /* base */
+  --ink: #103b32;          /* texto / esmeralda profundo */
+  --muted: #5f7a72;
+  --bg: #e7f1ef;
+  --surface: #ffffff;
+  --field: #f6faf9;        /* fundo de inputs */
+
+  /* marca */
+  --brand: #137a5e;        /* verde da logo */
+  --brand-deep: #0f5f49;
+  --aqua: #1597ac;         /* água-turquesa */
+  --aqua-light: #5cc7d6;
+
+  /* elogio (verde) */
+  --good: #137a5e;
+  --good-tint: #f1f8f4;
+  --good-line: #d3e7dd;
+
+  /* reclamação (âmbar quente) */
+  --warn: #c5792b;
+  --warn-deep: #a8631f;
+  --warn-tint: #fbf3e8;
+  --warn-line: #ecd2a8;
+
+  --line: rgba(16, 59, 50, 0.1);
+  --shadow: 0 16px 36px -20px rgba(10, 60, 55, 0.3);
+  --shadow-card: 0 8px 22px -16px rgba(10, 60, 55, 0.3);
+  --radius: 18px;
+
+  --font-display: "Cinzel", Georgia, serif;       /* títulos / wordmark */
+  --font-serif: "Cormorant Garamond", Georgia, serif; /* taglines */
+  --font-body: "Outfit", system-ui, sans-serif;   /* corpo / UI */
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+
+/* [hidden] precisa vencer regras de display (ex: .login usa display:flex),
+   senão a tela de login não some ao entrar no mural */
+[hidden] { display: none !important; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background:
+    radial-gradient(130% 54% at 50% -8%, #cfeaf0 0%, transparent 56%),
+    linear-gradient(180deg, #f0f7f5 0%, var(--bg) 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app { max-width: 620px; margin: 0 auto; padding: 18px 16px 90px; }
+
+/* ---------- animações sutis ---------- */
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .4; transform: scale(.8); } }
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; }
+}
+
+/* ---------- marca ---------- */
+.logo {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: .05em;
+  margin: 0;
+}
+.logo.sm { font-size: 18px; color: var(--ink); }
+
+/* círculo "água" animado, usado nas barras */
+.logo-mark {
+  flex: none;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--brand);
+  background: linear-gradient(135deg, var(--aqua-light) 0%, var(--aqua) 45%, #bfeaf0 100%);
+  background-size: 200% 200%;
+  animation: shimmer 6s linear infinite;
+}
+
+/* ---------- login ---------- */
+.login {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  padding: 9vh 8px 30px;
+}
+.brand { display: flex; flex-direction: column; align-items: center; }
+.brand-logo { width: 188px; max-width: 70vw; height: auto; animation: rise .6s ease both; }
+
+/* divisor clássico (linha + losango) */
+.rule {
+  display: flex; align-items: center; gap: 14px;
+  margin: 30px 0 6px;
+  animation: rise .6s ease both .06s both;
+}
+.rule::before, .rule::after {
+  content: ""; width: 34px; height: 1px; background: var(--brand);
+}
+.rule::before { background: linear-gradient(90deg, transparent, var(--brand)); }
+.rule::after { background: linear-gradient(90deg, var(--brand), transparent); }
+.rule i { width: 7px; height: 7px; background: var(--aqua); transform: rotate(45deg); }
+
+.brand .logo { font-size: 30px; color: var(--ink); animation: rise .6s ease both .1s both; }
+.tagline {
+  font-family: var(--font-serif); font-style: italic;
+  font-size: 21px; line-height: 1.4; color: #587068;
+  margin: 8px 0 0; max-width: 300px;
+  animation: rise .6s ease both .14s both;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+.login-card { width: 100%; max-width: 360px; margin-top: 40px; text-align: left; animation: rise .6s ease both .2s both; }
+.login-card label { display: block; font-weight: 600; font-size: .9rem; margin-bottom: 8px; }
+.fine { color: var(--muted); font-size: .82rem; margin: 14px 0 0; text-align: center; }
+.foot-note {
+  font-family: var(--font-display); font-size: 11px; letter-spacing: .18em;
+  color: #9bb0a8; margin-top: 24px;
+}
+.login .spacer { flex: 1; }
+
+/* ---------- campos ---------- */
+input, textarea, select {
+  font-family: inherit; font-size: 1rem; color: var(--ink);
+  width: 100%;
+  background: var(--field);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 14px;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--aqua);
+  box-shadow: 0 0 0 3px rgba(21, 151, 172, 0.16);
+}
+textarea { resize: vertical; line-height: 1.45; }
+
+/* ---------- botão primário ---------- */
+.btn-primary {
+  width: 100%; margin-top: 14px;
+  font-family: inherit; font-weight: 600; font-size: 1rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--aqua) 0%, var(--brand) 100%);
+  border: none; border-radius: 13px; padding: 15px;
+  cursor: pointer;
+  box-shadow: 0 12px 26px -14px rgba(19, 122, 94, 0.7);
+  transition: transform .08s ease, filter .15s ease;
+}
+.btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.btn-primary:active { transform: scale(.99); }
+.btn-primary:disabled { opacity: .6; cursor: default; transform: none; }
+
+/* ---------- topbar (mural) ---------- */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.topbar-brand { display: flex; align-items: center; gap: 10px; }
+.whoami { color: var(--muted); font-size: .9rem; }
+.whoami b { color: var(--ink); }
+
+/* ---------- composer ---------- */
+.composer { margin-bottom: 22px; }
+.composer-row {
+  display: flex; gap: 9px; margin-top: 11px; flex-wrap: wrap; align-items: center;
+}
+.composer-row select { flex: 1 1 140px; width: auto; }
+.type-toggle { display: flex; gap: 8px; }
+.type-toggle label { position: relative; cursor: pointer; }
+.type-toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.type-toggle span {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 11px 13px; border-radius: 12px;
+  border: 1.5px solid var(--line); background: #fff;
+  font-size: .86rem; font-weight: 500; color: var(--muted);
+  white-space: nowrap; transition: all .12s ease;
+}
+.type-toggle input:checked + span {
+  border-color: var(--good); background: var(--good-tint); color: var(--good); font-weight: 600;
+}
+.type-toggle label:last-child input:checked + span {
+  border-color: var(--warn); background: var(--warn-tint); color: var(--warn-deep);
+}
+
+/* ---------- feed / cards ---------- */
+.feed-list { display: grid; gap: 12px; }
+.empty {
+  font-family: var(--font-serif); font-style: italic; font-size: 1.2rem;
+  color: var(--muted); text-align: center; padding: 48px 16px;
+}
+
+.post {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 15px 17px;
+  box-shadow: var(--shadow-card);
+  animation: rise .5s ease both;
+}
+.post.elogio { background: var(--good-tint); border-color: var(--good-line); }
+.post.reclamacao { background: var(--warn-tint); border-color: var(--warn-line); }
+
+.post-head { display: flex; align-items: center; gap: 11px; margin-bottom: 9px; }
+.avatar {
+  width: 38px; height: 38px; flex: none;
+  display: grid; place-items: center;
+  border-radius: 13px;
+  background: linear-gradient(135deg, var(--aqua), var(--brand));
+  color: #fff; font-weight: 600; font-family: var(--font-display); font-size: 15px;
+}
+.avatar.reclamacao { background: linear-gradient(135deg, #dba24a, var(--warn)); }
+
+.who { display: grid; line-height: 1.25; margin-right: auto; }
+.who strong { font-size: .98rem; color: var(--ink); }
+.meta { color: var(--muted); font-size: .78rem; }
+.post p { margin: 0; line-height: 1.55; color: var(--ink); font-size: .92rem; }
+
+.tag {
+  font-size: .72rem; font-weight: 700;
+  padding: 5px 11px; border-radius: 999px;
+  background: var(--good); color: #fff;
+  display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+}
+.tag.reclamacao { background: var(--warn); }
+
+/* ---------- banner modo demo ---------- */
+.mode-banner {
+  position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: #fff;
+  font-size: .74rem; letter-spacing: .02em;
+  padding: 7px 14px; border-radius: 999px; opacity: .85;
+}
+
+/* ============================================================
+   PAINEL STAFF
+   ============================================================ */
+.staff-body {
+  background:
+    radial-gradient(110% 46% at 50% 0%, #d3eaee 0%, transparent 55%),
+    var(--bg);
+}
+.staff-topbar {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  flex-wrap: wrap;
+  padding: 16px 22px;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.staff-brand { display: flex; align-items: center; gap: 11px; }
+.staff-brand .logo { font-size: 19px; }
+.staff-badge {
+  font-size: .72rem; font-weight: 600; color: var(--brand);
+  background: var(--good-tint); padding: 5px 11px; border-radius: 999px;
+}
+.monitor { display: flex; align-items: center; gap: 12px; }
+.btn-monitor {
+  font-family: inherit; font-weight: 600; font-size: .9rem; cursor: pointer;
+  color: #fff; background: var(--brand);
+  border: none; border-radius: 999px; padding: 10px 17px;
+  box-shadow: 0 8px 18px -8px rgba(19, 122, 94, 0.8);
+}
+.monitor-status { font-size: .84rem; color: var(--muted); display: inline-flex; align-items: center; gap: 7px; }
+.monitor-status .dot {
+  width: 9px; height: 9px; border-radius: 50%; background: var(--muted);
+}
+.monitor-status.on { color: var(--brand); font-weight: 600; }
+.monitor-status.on .dot { background: var(--brand); animation: pulse 1.8s ease-in-out infinite; }
+
+.filters {
+  display: flex; gap: 9px; flex-wrap: wrap;
+  max-width: 760px; margin: 18px auto 0; padding: 0 22px;
+}
+.filters button {
+  font-family: inherit; font-size: .9rem; font-weight: 500; cursor: pointer;
+  color: var(--ink); background: #fff;
+  border: 1.5px solid var(--line); border-radius: 999px; padding: 9px 16px;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.filters button.active { color: #fff; }
+.filters button[data-filter="reclamacao"].active { background: var(--warn); border-color: var(--warn); }
+.filters button[data-filter="todos"].active { background: var(--brand-deep); border-color: var(--brand-deep); }
+.filters button[data-filter="elogio"].active { background: var(--brand); border-color: var(--brand); }
+
+.staff-feed { max-width: 760px; margin: 16px auto 60px; padding: 0 22px; }
+
+/* no staff, reclamação ganha destaque forte (borda lateral + sombra) */
+.staff-feed .post { border-radius: 16px; padding: 16px 18px; }
+.staff-feed .post.reclamacao {
+  background: var(--warn-tint);
+  border-left: 5px solid var(--warn);
+  box-shadow: 0 10px 26px -18px rgba(170, 110, 40, 0.5);
+}
+.staff-feed .post.elogio {
+  background: #fff; border-left: 5px solid var(--brand);
+}
+
+.hide-btn {
+  flex: none; cursor: pointer;
+  width: 30px; height: 30px; border-radius: 9px;
+  border: 1px solid var(--line); background: #fff; color: var(--muted);
+  font-size: 14px; line-height: 1;
+}
+.hide-btn:hover { background: var(--warn-tint); color: var(--warn); border-color: var(--warn); }
+
+/* ---------- responsivo ---------- */
+@media (max-width: 480px) {
+  .composer-row { gap: 8px; }
+  .type-toggle span { padding: 10px 11px; }
+}

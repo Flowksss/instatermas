@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#137a5e" />
+  <title>Instermas · Termas Romanas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <main class="app">
+    <!-- ====== LOGIN ====== -->
+    <section id="login-view" class="login">
+      <div class="brand">
+        <img class="brand-logo" src="assets/termas-logo.webp" alt="Termas Romanas — Recanto Maestro" />
+        <div class="rule"><i></i></div>
+        <h1 class="logo">INSTERMAS</h1>
+        <p class="tagline">O mural das Termas. Conte pra todo mundo o que está rolando por aqui.</p>
+      </div>
+
+      <div class="card login-card">
+        <label for="name-input">Seu nome</label>
+        <input id="name-input" type="text" placeholder="Ex: Guilherme Busato" autocomplete="off" />
+        <button id="enter-btn" class="btn-primary">Entrar no mural</button>
+        <p class="fine">Sem senha, sem e-mail. Só o seu nome.</p>
+      </div>
+
+      <div class="spacer"></div>
+      <div class="foot-note">RECANTO MAESTRO</div>
+    </section>
+
+    <!-- ====== MURAL ====== -->
+    <section id="feed-view" class="feed" hidden>
+      <header class="topbar">
+        <div class="topbar-brand">
+          <span class="logo-mark"></span>
+          <strong class="logo sm">Instermas</strong>
+        </div>
+        <span class="whoami">Olá, <b id="whoami"></b></span>
+      </header>
+
+      <div class="card composer">
+        <textarea id="composer-text" rows="3" placeholder="Uma dica, um elogio ou uma reclamação..."></textarea>
+        <div class="composer-row">
+          <select id="sector-select" aria-label="Setor"></select>
+          <div class="type-toggle">
+            <label><input type="radio" name="ptype" value="elogio" checked /><span>👍 Elogio</span></label>
+            <label><input type="radio" name="ptype" value="reclamacao" /><span>⚠ Reclamação</span></label>
+          </div>
+        </div>
+        <button id="post-btn" class="btn-primary">Postar no mural</button>
+      </div>
+
+      <div id="feed-list" class="feed-list"></div>
+    </section>
+  </main>
+
+  <div id="mode-banner" class="mode-banner" hidden>modo demo · só neste aparelho</div>
+
+  <script src="js/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/backend.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if (window.INSTERMAS_MODE === "demo") document.getElementById("mode-banner").hidden = false;
+  </script>
+</body>
+</html>
