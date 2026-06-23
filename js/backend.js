@@ -30,6 +30,13 @@
         const { error } = await client.from("posts").update({ hidden: true }).eq("id", id);
         if (error) throw error;
       },
+      async respond(id, text) {
+        const { error } = await client
+          .from("posts")
+          .update({ response: text, responded_at: new Date().toISOString() })
+          .eq("id", id);
+        if (error) throw error;
+      },
       subscribe(onChange) {
         client
           .channel("posts-stream")
@@ -66,6 +73,11 @@
       },
       async hide(id) {
         write(read().map((p) => (p.id === id ? { ...p, hidden: true } : p)));
+        emit();
+      },
+      async respond(id, text) {
+        write(read().map((p) =>
+          p.id === id ? { ...p, response: text, responded_at: new Date().toISOString() } : p));
         emit();
       },
       subscribe(onChange) {

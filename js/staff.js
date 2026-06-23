@@ -19,6 +19,7 @@
   let audioCtx = null;
   const knownComplaints = new Set();
   let firstLoad = true;
+  let editing = false; // segura o re-render enquanto staff digita uma resposta
 
   // ---------- beep (WebAudio, sem arquivo) ----------
   function beep() {
@@ -82,7 +83,89 @@
     }, 700);
   }
 
+  function responseHTML(p) {
+    if (!p.response) return "";
+    return `
+          <div class="response">
+            <span class="response-label">💬 Resposta · ${esc(p.sector)}</span>
+            <p>${esc(p.response)}</p>
+          </div>`;
+  }
+
+  function cardHTML(p) {
+    return `
+      <div class="post-row" data-id="${esc(p.id)}">
+        <div class="swipe-action">
+          <button class="reply-reveal">${p.response ? "✎ Editar" : "↩ Responder"}</button>
+        </div>
+        <article class="post ${esc(p.type)}">
+          <header class="post-head">
+            <span class="avatar ${esc(p.type)}">${initialOf(p.name)}</span>
+            <div class="who">
+              <strong>${esc(p.name)}</strong>
+              <span class="meta">${esc(p.sector)} · ${timeAgo(p.created_at)}</span>
+            </div>
+            <span class="tag ${esc(p.type)}">${p.type === "reclamacao" ? "⚠ Reclamação" : "👍 Elogio"}</span>
+            <button class="hide-btn" title="Ocultar mensagem">✕</button>
+          </header>
+          <p>${esc(p.message)}</p>
+          ${responseHTML(p)}
+          <div class="reply-editor">
+            <textarea class="reply-text" rows="2" placeholder="Escreva a resposta do setor...">${p.response ? esc(p.response) : ""}</textarea>
+            <div class="reply-actions">
+              <button class="reply-cancel">Cancelar</button>
+              <button class="reply-send">Enviar resposta</button>
+            </div>
+          </div>
+        </article>
+      </div>`;
+  }
+
+  // ---- swipe pra revelar "Responder" (toque + mouse via Pointer Events) ----
+  const OPEN_X = -120;
+  function setupSwipe(row) {
+    const post = row.querySelector(".post");
+    let startX = 0, dx = 0, dragging = false, opened = false;
+    const setX = (x) => { post.style.transform = `translateX(${x}px)`; };
+
+    post.addEventListener("pointerdown", (e) => {
+      if (e.target.closest("button, textarea, .reply-editor")) return;
+      dragging = true; startX = e.clientX; post.style.transition = "none";
+      try { post.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+    post.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      dx = Math.max(OPEN_X, Math.min(0, e.clientX - startX + (opened ? OPEN_X : 0)));
+      setX(dx);
+    });
+    const end = () => {
+      if (!dragging) return;
+      dragging = false;
+      post.style.transition = "transform .18s ease";
+      opened = dx < OPEN_X / 2;
+      setX(opened ? OPEN_X : 0);
+    };
+    post.addEventListener("pointerup", end);
+    post.addEventListener("pointercancel", end);
+
+    row.querySelector(".reply-reveal").addEventListener("click", () => {
+      post.style.transition = "transform .18s ease"; setX(0); opened = false;
+      openEditor(row);
+    });
+  }
+
+  function openEditor(row) {
+    editing = true;
+    row.querySelector(".reply-editor").classList.add("open");
+    const ta = row.querySelector(".reply-text");
+    ta.focus();
+    ta.setSelectionRange(ta.value.length, ta.value.length);
+  }
+  function closeEditor() { editing = false; render(); }
+
   async function render() {
+    if (editing) return; // não rebuildar enquanto staff digita uma resposta
+
     const all = await backend.list();
     const complaints = all.filter((p) => p.type === "reclamacao" && !p.hidden);
 
@@ -103,31 +186,38 @@
       return;
     }
 
-    feedList.innerHTML = list
-      .map((p) => `
-      <article class="post ${esc(p.type)}">
-        <header class="post-head">
-          <span class="avatar ${esc(p.type)}">${initialOf(p.name)}</span>
-          <div class="who">
-            <strong>${esc(p.name)}</strong>
-            <span class="meta">${esc(p.sector)} · ${timeAgo(p.created_at)}</span>
-          </div>
-          <span class="tag ${esc(p.type)}">${p.type === "reclamacao" ? "⚠ Reclamação" : "👍 Elogio"}</span>
-          <button class="hide-btn" data-id="${esc(p.id)}" title="Ocultar mensagem">✕</button>
-        </header>
-        <p>${esc(p.message)}</p>
-      </article>`)
-      .join("");
+    feedList.innerHTML = list.map(cardHTML).join("");
 
-    feedList.querySelectorAll(".hide-btn").forEach((b) =>
-      b.addEventListener("click", async () => {
+    feedList.querySelectorAll(".post-row").forEach((row) => {
+      setupSwipe(row);
+      row.querySelector(".hide-btn").addEventListener("click", async () => {
         if (confirm("Ocultar esta mensagem do mural?")) {
-          await backend.hide(b.dataset.id);
+          await backend.hide(row.dataset.id);
           render();
         }
-      })
-    );
+      });
+      row.querySelector(".reply-cancel").addEventListener("click", closeEditor);
+      row.querySelector(".reply-send").addEventListener("click", async (e) => {
+        const text = row.querySelector(".reply-text").value.trim();
+        if (!text) { row.querySelector(".reply-text").focus(); return; }
+        e.target.disabled = true;
+        try {
+          await backend.respond(row.dataset.id, text);
+          editing = false;
+          render();
+        } catch (err) {
+          e.target.disabled = false;
+          alert("Erro ao responder: " + (err.message || err));
+        }
+      });
+    });
   }
+
+  // dica de descoberta do gesto (inserida uma vez, antes do feed)
+  const hint = document.createElement("p");
+  hint.className = "swipe-hint";
+  hint.textContent = "↔ Arraste um card para o lado para responder";
+  feedList.before(hint);
 
   backend.subscribe(() => render());
   render();

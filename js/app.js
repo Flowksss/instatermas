@@ -97,6 +97,7 @@
           <span class="tag ${esc(p.type)}">${p.type === "reclamacao" ? "⚠ Reclamação" : "👍 Elogio"}</span>
         </header>
         <p>${esc(p.message)}</p>
+        ${p.response ? `<div class="response"><span class="response-label">💬 Resposta · ${esc(p.sector)}</span><p>${esc(p.response)}</p></div>` : ""}
       </article>`)
       .join("");
   }

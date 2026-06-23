@@ -325,3 +325,70 @@ textarea { resize: vertical; line-height: 1.45; }
   .composer-row { gap: 8px; }
   .type-toggle span { padding: 10px 11px; }
 }
+
+/* ============================================================
+   RESPOSTA DO SETOR (mural + painel) + swipe-para-responder
+   ============================================================ */
+
+/* bloco da resposta, embaixo do feedback */
+.response {
+  margin-top: 11px;
+  padding: 10px 13px;
+  border-radius: 12px;
+  background: var(--good-tint);
+  border-left: 3px solid var(--brand);
+}
+.response-label {
+  display: block;
+  font-size: .72rem; font-weight: 700; letter-spacing: .02em;
+  color: var(--brand-deep); margin-bottom: 3px;
+}
+.response p { margin: 0; font-size: .9rem; line-height: 1.5; color: var(--ink); }
+
+/* dica de descoberta do gesto */
+.swipe-hint {
+  max-width: 760px; margin: 12px auto -4px; padding: 0 22px;
+  font-size: .78rem; color: var(--muted); text-align: center;
+}
+
+/* linha do card no painel: segura a ação atrás (revelada no swipe) */
+.staff-feed .post-row {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--brand); /* fundo verde da ação */
+}
+.swipe-action {
+  position: absolute; inset: 0 0 0 auto;
+  width: 120px;
+  display: flex; align-items: center; justify-content: center;
+}
+.reply-reveal {
+  font-family: inherit; font-weight: 600; font-size: .82rem; cursor: pointer;
+  color: #fff; background: transparent; border: none;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+/* o card desliza por cima da ação */
+.staff-feed .post-row > .post {
+  position: relative; z-index: 1;
+  touch-action: pan-y;     /* mantém o scroll vertical da página */
+  will-change: transform;
+}
+
+/* editor de resposta — desliza aberto */
+.reply-editor { max-height: 0; overflow: hidden; transition: max-height .22s ease; }
+.reply-editor.open { max-height: 280px; margin-top: 11px; }
+.reply-text {
+  width: 100%; font-family: inherit; font-size: .95rem; color: var(--ink);
+  border: 1.5px solid var(--line); border-radius: 11px; padding: 11px 12px;
+  background: var(--field); resize: vertical; line-height: 1.45;
+}
+.reply-text:focus { outline: none; border-color: var(--aqua); box-shadow: 0 0 0 3px rgba(21,151,172,.16); }
+.reply-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 9px; }
+.reply-actions button {
+  font-family: inherit; font-weight: 600; font-size: .86rem; cursor: pointer;
+  border-radius: 10px; padding: 9px 15px; border: 1.5px solid var(--line);
+}
+.reply-cancel { background: #fff; color: var(--muted); }
+.reply-send { background: var(--brand); color: #fff; border-color: var(--brand); }
+.reply-send:disabled { opacity: .6; cursor: default; }

@@ -5,14 +5,20 @@
 
 -- 1) Tabela das mensagens
 create table if not exists public.posts (
-  id         uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  name       text not null,
-  sector     text not null,
-  type       text not null check (type in ('elogio', 'reclamacao')),
-  message    text not null,
-  hidden     boolean not null default false
+  id           uuid primary key default gen_random_uuid(),
+  created_at   timestamptz not null default now(),
+  name         text not null,
+  sector       text not null,
+  type         text not null check (type in ('elogio', 'reclamacao')),
+  message      text not null,
+  hidden       boolean not null default false,
+  response     text,         -- resposta do setor (uma por feedback)
+  responded_at timestamptz   -- quando o setor respondeu
 );
+
+-- 1b) Se a tabela já existia, garanta as colunas de resposta:
+alter table public.posts add column if not exists response     text;
+alter table public.posts add column if not exists responded_at timestamptz;
 
 -- 2) Ligar o tempo real nesta tabela
 --    (se der erro "is already member", pode ignorar)
